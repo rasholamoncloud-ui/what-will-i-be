@@ -1,0 +1,1404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What Will I Be? Career Exploration App</title>
+  <style>
+    :root {
+      --ink: #172026;
+      --muted: #5b6670;
+      --line: #d9e0e7;
+      --paper: #fbfaf6;
+      --white: #ffffff;
+      --green: #2f7d5f;
+      --green-soft: #dff0e7;
+      --coral: #cc5b4f;
+      --coral-soft: #f9ded8;
+      --gold: #b88322;
+      --gold-soft: #fff0c4;
+      --blue: #3d6f99;
+      --blue-soft: #dcebf7;
+      --shadow: 0 18px 45px rgba(23, 32, 38, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      background: #173329;
+      color: var(--white);
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding-bottom: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      margin-bottom: 20px;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--gold-soft);
+      color: #173329;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .brand h1 {
+      font-size: 18px;
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, 0.84);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .main {
+      padding: 28px;
+      max-width: 1160px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .profile-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: #174b37;
+      font-weight: 700;
+    }
+
+    .hero {
+      min-height: 260px;
+      background:
+        linear-gradient(90deg, rgba(23, 51, 41, 0.92), rgba(23, 51, 41, 0.68)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='520' viewBox='0 0 1200 520'%3E%3Crect fill='%23f7ead0' width='1200' height='520'/%3E%3Ccircle cx='170' cy='150' r='70' fill='%23d96e61'/%3E%3Ccircle cx='1010' cy='120' r='88' fill='%234d84a8'/%3E%3Crect x='210' y='265' width='180' height='120' rx='16' fill='%23ffffff'/%3E%3Crect x='450' y='210' width='280' height='170' rx='20' fill='%23dcebf7'/%3E%3Crect x='790' y='250' width='190' height='130' rx='18' fill='%23dff0e7'/%3E%3Cpath d='M120 420 C280 360 350 450 520 395 S820 350 1080 430' fill='none' stroke='%23b88322' stroke-width='18' stroke-linecap='round'/%3E%3Cpath d='M505 260 h170 M505 302 h130 M505 344 h92' stroke='%233d6f99' stroke-width='18' stroke-linecap='round'/%3E%3Cpath d='M255 315 h90 M255 350 h55' stroke='%23cc5b4f' stroke-width='16' stroke-linecap='round'/%3E%3Cpath d='M835 305 h100 M835 342 h70' stroke='%232f7d5f' stroke-width='16' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+      border-radius: 8px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero h2 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1;
+      letter-spacing: 0;
+      max-width: 760px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 680px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 17px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin: 0 0 16px;
+    }
+
+    .section-header h3 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .section-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 150px;
+      box-shadow: 0 10px 24px rgba(23, 32, 38, 0.06);
+    }
+
+    .career-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .career-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .career-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+      background: var(--blue-soft);
+    }
+
+    .career-card:nth-child(2n) .career-icon { background: var(--green-soft); }
+    .career-card:nth-child(3n) .career-icon { background: var(--coral-soft); }
+    .career-card:nth-child(4n) .career-icon { background: var(--gold-soft); }
+
+    .career-card h4,
+    .resource h4,
+    .guide-item h4 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .career-card p,
+    .resource p,
+    .guide-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #f0f3f5;
+      color: #34424d;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+    }
+
+    .small-button,
+    .primary-button {
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      min-height: 40px;
+      padding: 9px 12px;
+      font-weight: 700;
+    }
+
+    .primary-button {
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .small-button {
+      background: #eef2f4;
+      color: var(--ink);
+    }
+
+    .resource-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .resource {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 130px;
+    }
+
+    .resource strong {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      margin-bottom: 10px;
+      background: var(--gold-soft);
+    }
+
+    .profile-panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(23, 32, 38, 0.06);
+    }
+
+    .profile-panel h3 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .profile-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-panel,
+    .flashcard-panel,
+    .qr-panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(23, 32, 38, 0.06);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .option.selected {
+      border-color: var(--green);
+      background: var(--green-soft);
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #edf1f4;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width 0.2s ease;
+    }
+
+    .flashcard {
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(145deg, var(--blue-soft), #fff);
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 24px;
+      margin-bottom: 14px;
+    }
+
+    .flashcard .symbol {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+
+    .flashcard h4 {
+      font-size: 28px;
+      margin: 0 0 8px;
+    }
+
+    .flash-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .activity-list,
+    .guide-list,
+    .qr-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .activity {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .activity .number,
+    .guide-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--coral-soft);
+      font-weight: 800;
+    }
+
+    .activity h4 {
+      margin: 0 0 3px;
+    }
+
+    .activity p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .guide-item {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 12px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .qr-card {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .search-box {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search-box input {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: var(--white);
+    }
+
+    .chat-window {
+      display: grid;
+      gap: 10px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 300px;
+    }
+
+    .message {
+      max-width: 78%;
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #eef2f4;
+    }
+
+    .message.mine {
+      margin-left: auto;
+      background: var(--green-soft);
+    }
+
+    .community-post {
+      display: grid;
+      gap: 8px;
+    }
+
+    .fake-qr {
+      width: 82px;
+      height: 82px;
+      border-radius: 6px;
+      background:
+        linear-gradient(90deg, #111 10px, transparent 10px) 0 0 / 20px 20px,
+        linear-gradient(#111 10px, transparent 10px) 0 0 / 20px 20px,
+        #fff;
+      border: 8px solid #fff;
+      box-shadow: inset 0 0 0 2px #111, 0 0 0 1px var(--line);
+    }
+
+    .empty-state {
+      background: #f7f1df;
+      border: 1px solid #ead69b;
+      border-radius: 8px;
+      padding: 14px;
+      color: #65490b;
+    }
+
+    @media (max-width: 920px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid,
+      .resource-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main {
+        padding: 18px;
+      }
+
+      .topbar,
+      .section-header,
+      .activity,
+      .qr-card {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .nav,
+      .grid,
+      .resource-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 22px;
+        min-height: 310px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">W</div>
+        <div>
+          <h1>What Will I Be?</h1>
+          <p>Career discovery app</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main sections">
+        <button class="active" data-section="home">Home</button>
+        <button data-section="careers">Careers</button>
+        <button data-section="quiz">Quiz</button>
+        <button data-section="flashcards">Flashcards</button>
+        <button data-section="workbooks">Workbooks</button>
+        <button data-section="guide">Guide</button>
+        <button data-section="qr">QR Hub</button>
+        <button data-section="search">Search</button>
+        <button data-section="chat">Chat</button>
+        <button data-section="community">Community</button>
+        <button data-section="progress">Progress</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <strong id="profileWelcome">Welcome, Rashidat.</strong>
+          <div id="profileSubtitle" style="color: var(--muted);">A first app prototype for your career exploration solution.</div>
+        </div>
+        <div class="profile-switcher" aria-label="Choose user type">
+          <button class="chip active" data-profile="Child">Child</button>
+          <button class="chip" data-profile="Teen">Teen</button>
+          <button class="chip" data-profile="Parent">Parent</button>
+          <button class="chip" data-profile="Teacher">Teacher</button>
+        </div>
+      </div>
+
+      <section id="home" class="section active">
+        <div class="hero">
+          <h2 id="heroTitle">Helping children discover who they can become.</h2>
+          <p id="heroText">Explore careers, talents, school subjects, activities, flashcards, and guidance from one simple QR-friendly app.</p>
+        </div>
+        <div class="profile-panel">
+          <h3 id="profileTitle"></h3>
+          <p id="profileDescription"></p>
+          <div id="profileActions" class="action-row"></div>
+        </div>
+        <div class="resource-strip">
+          <article class="resource">
+            <strong>B</strong>
+            <h4>Book</h4>
+            <p>Connect chapters to digital career profiles and activities.</p>
+          </article>
+          <article class="resource">
+            <strong>Y</strong>
+            <h4>Young Workbook</h4>
+            <p>Simple drawing, matching, and reflection tasks.</p>
+          </article>
+          <article class="resource">
+            <strong>A</strong>
+            <h4>Adolescent Workbook</h4>
+            <p>Interest discovery, goal setting, and pathway planning.</p>
+          </article>
+          <article class="resource">
+            <strong>F</strong>
+            <h4>Flashcards</h4>
+            <p>Career cards with tools, skills, and discussion prompts.</p>
+          </article>
+          <article class="resource">
+            <strong>G</strong>
+            <h4>Guide</h4>
+            <p>Support notes for parents, teachers, and facilitators.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="careers" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Career Library</h3>
+            <p>Your guide structure is now inside the app: 14 career families and 50+ careers.</p>
+          </div>
+          <select id="careerFilter" aria-label="Filter careers">
+            <option value="All">All families</option>
+            <option value="Health & Care Careers">Health & Care Careers</option>
+            <option value="Life & Environmental Sciences">Life & Environmental Sciences</option>
+            <option value="Engineering, Building & Systems">Engineering, Building & Systems</option>
+            <option value="Technology & Data Careers">Technology & Data Careers</option>
+            <option value="Invention & Applied Science">Invention & Applied Science</option>
+            <option value="Education & Knowledge Sharing">Education & Knowledge Sharing</option>
+            <option value="Visual & Design Arts">Visual & Design Arts</option>
+            <option value="Fashion & Personal Design">Fashion & Personal Design</option>
+            <option value="Performing Arts">Performing Arts</option>
+            <option value="Media, Space & Experience Design">Media, Space & Experience Design</option>
+            <option value="Writing & Language Arts">Writing & Language Arts</option>
+            <option value="Business Creation & Growth">Business Creation & Growth</option>
+            <option value="Finance & Numbers">Finance & Numbers</option>
+            <option value="Law, Justice & Advocacy">Law, Justice & Advocacy</option>
+          </select>
+        </div>
+        <div id="careerGrid" class="grid"></div>
+      </section>
+
+      <section id="quiz" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Career Discovery Quiz</h3>
+            <p>Children choose what sounds like them, then receive suggested careers.</p>
+          </div>
+        </div>
+        <div class="quiz-panel">
+          <div class="progress-track"><div id="quizProgress" class="progress-fill"></div></div>
+          <h4 id="quizQuestion"></h4>
+          <div id="quizOptions" class="quiz-options"></div>
+          <button id="quizNext" class="primary-button">Next</button>
+          <div id="quizResult" style="margin-top: 16px;"></div>
+        </div>
+      </section>
+
+      <section id="flashcards" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Digital Flashcards</h3>
+            <p>Use these with children for quick discussion and career vocabulary.</p>
+          </div>
+        </div>
+        <div class="flashcard-panel">
+          <div id="flashcard" class="flashcard"></div>
+          <div class="flash-controls">
+            <button id="prevCard" class="small-button">Previous</button>
+            <button id="flipCard" class="primary-button">Show Prompt</button>
+            <button id="nextCard" class="small-button">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="workbooks" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Workbook Activities</h3>
+            <p>Activity samples for young learners and adolescents.</p>
+          </div>
+        </div>
+        <div class="activity-list">
+          <article class="activity">
+            <div class="number">1</div>
+            <div>
+              <h4>Draw Your Future Self</h4>
+              <p>Young learners draw a job they admire and name one tool used in that job.</p>
+            </div>
+            <button class="small-button complete-activity">Mark Done</button>
+          </article>
+          <article class="activity">
+            <div class="number">2</div>
+            <div>
+              <h4>My Talent Map</h4>
+              <p>Children list what they enjoy, what people praise them for, and what they want to learn.</p>
+            </div>
+            <button class="small-button complete-activity">Mark Done</button>
+          </article>
+          <article class="activity">
+            <div class="number">3</div>
+            <div>
+              <h4>Subject to Career Match</h4>
+              <p>Adolescents connect school subjects to careers and possible study pathways.</p>
+            </div>
+            <button class="small-button complete-activity">Mark Done</button>
+          </article>
+          <article class="activity">
+            <div class="number">4</div>
+            <div>
+              <h4>Career Interview</h4>
+              <p>Learners ask an adult about their work, skills, challenges, and advice.</p>
+            </div>
+            <button class="small-button complete-activity">Mark Done</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="guide" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Parent and Teacher Guide</h3>
+            <p>Simple support notes for guided career conversations.</p>
+          </div>
+        </div>
+        <div class="guide-list">
+          <article class="guide-item">
+            <div class="guide-icon">Q</div>
+            <div>
+              <h4>Ask open questions</h4>
+              <p>Try: What do you enjoy doing? What problem would you like to solve? Who do you admire and why?</p>
+            </div>
+          </article>
+          <article class="guide-item">
+            <div class="guide-icon">S</div>
+            <div>
+              <h4>Observe strengths</h4>
+              <p>Notice curiosity, care, leadership, creativity, patience, confidence, and practical skill.</p>
+            </div>
+          </article>
+          <article class="guide-item">
+            <div class="guide-icon">P</div>
+            <div>
+              <h4>Connect to pathways</h4>
+              <p>Help learners see the subjects, habits, mentors, and experiences that support a future career.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="qr" class="section">
+        <div class="section-header">
+          <div>
+            <h3>QR Code Hub</h3>
+            <p>A planning space for connecting your printed materials to app pages.</p>
+          </div>
+        </div>
+        <div class="qr-list">
+          <article class="qr-card">
+            <div class="fake-qr" aria-label="Sample QR pattern"></div>
+            <div>
+              <h4>Book Main QR</h4>
+              <p>Opens the app home page and lets users choose child, teen, parent, or teacher.</p>
+            </div>
+            <button class="small-button" data-section-link="home">Open</button>
+          </article>
+          <article class="qr-card">
+            <div class="fake-qr" aria-label="Sample QR pattern"></div>
+            <div>
+              <h4>Flashcard QR</h4>
+              <p>Opens the matching career card, discussion prompt, and related workbook activity.</p>
+            </div>
+            <button class="small-button" data-section-link="flashcards">Open</button>
+          </article>
+          <article class="qr-card">
+            <div class="fake-qr" aria-label="Sample QR pattern"></div>
+            <div>
+              <h4>Workbook QR</h4>
+              <p>Opens a digital version of the exact activity and saves completion progress.</p>
+            </div>
+            <button class="small-button" data-section-link="workbooks">Open</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="search" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Quick Search</h3>
+            <p>Search careers, families, subjects, skills, and activities.</p>
+          </div>
+        </div>
+        <div class="search-box">
+          <input id="quickSearchInput" type="search" placeholder="Search doctor, farmer, ICT, drawing, fairness..." aria-label="Search careers">
+          <button id="quickSearchButton" class="primary-button">Search</button>
+        </div>
+        <div id="quickSearchResults" class="grid"></div>
+      </section>
+
+      <section id="chat" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Quick Chat</h3>
+            <p>Prototype view for real-time support between learners, parents, teachers, and moderators.</p>
+          </div>
+        </div>
+        <div class="chat-window">
+          <div class="message"><strong>Teacher:</strong> Which career family should I use for a 10-minute assembly talk?</div>
+          <div class="message mine"><strong>Moderator:</strong> Start with one family, show two flashcards, sing the short song, then ask one observation question.</div>
+          <div class="message"><strong>Parent:</strong> My child likes drawing clothes. Where should I begin?</div>
+          <div class="message mine"><strong>Moderator:</strong> Try Fashion & Personal Design, then compare it with Visual & Design Arts.</div>
+        </div>
+        <p style="color: var(--muted);">Launch requirement: this needs user accounts, moderation, abuse reporting, logging, and protected real-time infrastructure.</p>
+      </section>
+
+      <section id="community" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Community</h3>
+            <p>A moderated space for parents, teachers, and learners to share career discovery experiences.</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card community-post">
+            <h4>Parents Circle</h4>
+            <p>Parents discuss children’s interests, observation patterns, and home activities.</p>
+            <button class="small-button">Read Discussions</button>
+          </article>
+          <article class="card community-post">
+            <h4>Teachers Forum</h4>
+            <p>Teachers share classroom lesson ideas, career day plans, and activity results.</p>
+            <button class="small-button">Read Discussions</button>
+          </article>
+          <article class="card community-post">
+            <h4>Learner Stories</h4>
+            <p>Moderated stories where children and adolescents can read safe, age-appropriate experiences.</p>
+            <button class="small-button">Read Stories</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="progress" class="section">
+        <div class="section-header">
+          <div>
+            <h3>Progress</h3>
+            <p>Saved favorites and completed activities stay on this device.</p>
+          </div>
+        </div>
+        <div id="progressPanel"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const familyData = [
+      {
+        name: "Health & Care Careers",
+        focus: "Helping, caring, precision, and responsibility.",
+        subjects: ["Biology", "Health", "Chemistry"],
+        skills: ["Care", "Observation", "Responsibility"],
+        activity: "Role-play a hospital or clinic and draw a person who helps you when you are sick.",
+        careers: ["Doctor", "Nurse", "Dentist", "Pharmacist", "Biomedical Engineer", "Food Scientist/Nutritionist", "Microbiologist", "Paramedic", "Phlebotomist"]
+      },
+      {
+        name: "Life & Environmental Sciences",
+        focus: "Observation, research, nature, and curiosity.",
+        subjects: ["Science", "Agriculture", "Geography"],
+        skills: ["Curiosity", "Research", "Care for nature"],
+        activity: "Take a nature walk, collect safe objects, and record what you observe.",
+        careers: ["Microbiologist", "Environmental Scientist", "Food Scientist/Nutritionist", "Geologist", "Meteorologist"]
+      },
+      {
+        name: "Engineering, Building & Systems",
+        focus: "Designing, fixing, constructing, and problem-solving.",
+        subjects: ["Mathematics", "Physics", "Technical Drawing"],
+        skills: ["Logical thinking", "Persistence", "Testing"],
+        activity: "Build a structure with blocks or cardboard and test how strong it is.",
+        careers: ["Biomedical Engineer", "Mechanical Engineer", "Civil Engineer", "Architect", "Electrician"]
+      },
+      {
+        name: "Technology & Data Careers",
+        focus: "Logic, systems, innovation, and digital thinking.",
+        subjects: ["Computer Science", "Mathematics", "ICT"],
+        skills: ["Sequencing", "Problem solving", "Digital thinking"],
+        activity: "Arrange daily routine steps like computer commands and design a simple app idea.",
+        careers: ["Data Scientist", "Computer Programmer", "Software Developer", "Robotics Engineer"]
+      },
+      {
+        name: "Invention & Applied Science",
+        focus: "Imagination, function, innovation, and creation.",
+        subjects: ["Basic Science", "Creative Arts", "Technology"],
+        skills: ["Imagination", "Experimenting", "Problem solving"],
+        activity: "Draw and design a new toy or helpful invention using recycled materials.",
+        careers: ["Inventor", "Toy Designer"]
+      },
+      {
+        name: "Education & Knowledge Sharing",
+        focus: "Teaching, explaining, guiding, encouraging, and communication.",
+        subjects: ["English", "Education", "Social Studies"],
+        skills: ["Speaking", "Patience", "Encouragement"],
+        activity: "Let the child teach a friend one simple thing and ask questions after.",
+        careers: ["Teacher"]
+      },
+      {
+        name: "Visual & Design Arts",
+        focus: "Seeing, shaping, creativity, observing, aesthetics, and expression.",
+        subjects: ["Creative Arts", "Design", "ICT"],
+        skills: ["Creativity", "Observation", "Visual expression"],
+        activity: "Create an art corner, design a dream object, or illustrate a short story.",
+        careers: ["Artist", "Painter", "Illustrator", "Digital Artist", "Sculptor", "Potter", "Muralist", "Calligrapher"]
+      },
+      {
+        name: "Fashion & Personal Design",
+        focus: "Style, identity, creativity, function, self-expression, and beauty.",
+        subjects: ["Creative Arts", "Home Economics", "Business"],
+        skills: ["Style", "Measuring", "Creative expression"],
+        activity: "Design a simple outfit, combine colours and fabrics, or host a mini fashion show.",
+        careers: ["Fashion Designer", "Dressmaker (Tailor)", "Makeup Artist/Face Painter"]
+      },
+      {
+        name: "Performing Arts",
+        focus: "Expression, confidence, storytelling, and movement.",
+        subjects: ["Music", "Drama", "English"],
+        skills: ["Confidence", "Voice", "Movement"],
+        activity: "Perform a mini drama, song, dance, poem, or stage story.",
+        careers: ["Musician", "Instrumentalist", "Dancer", "Actor/Actress", "Spoken Word/Performance Poet"]
+      },
+      {
+        name: "Media, Space & Experience Design",
+        focus: "Story worlds, experience, imagination, and world-building.",
+        subjects: ["Creative Arts", "ICT", "Media Studies"],
+        skills: ["Storytelling", "Design", "Imagination"],
+        activity: "Pretend to direct a movie, take photographs, design a room, or build a game world.",
+        careers: ["Photographer", "Filmmaker", "Game Designer", "Set Designer", "Interior Designer"]
+      },
+      {
+        name: "Writing & Language Arts",
+        focus: "Words, ideas, meaning, communication, and imagination.",
+        subjects: ["English", "Literature", "Civic Education"],
+        skills: ["Writing", "Storytelling", "Language confidence"],
+        activity: "Write a short story, create a poem, interview someone, or read aloud.",
+        careers: ["Writer"]
+      },
+      {
+        name: "Business Creation & Growth",
+        focus: "Leadership, risk, strategy, decision-making, and value creation.",
+        subjects: ["Business Studies", "Mathematics", "ICT"],
+        skills: ["Leadership", "Planning", "Marketing"],
+        activity: "Run a pretend market, advertise a service, organize an event, or solve a customer problem.",
+        careers: ["Entrepreneur", "Marketing Expert", "Event Planner", "Farmer"]
+      },
+      {
+        name: "Finance & Numbers",
+        focus: "Decision making, planning, responsibility, accountability, and accuracy.",
+        subjects: ["Mathematics", "Business Studies", "Economics"],
+        skills: ["Counting", "Planning", "Accuracy"],
+        activity: "Run a mini bank, count pretend money, record sales, or make a simple budget.",
+        careers: ["Banker", "Accountant"]
+      },
+      {
+        name: "Law, Justice & Advocacy",
+        focus: "Rules, protection, fairness, and justice.",
+        subjects: ["Civic Education", "English", "Government"],
+        skills: ["Fairness", "Speaking", "Respect"],
+        activity: "Hold a mock courtroom, sort fair and unfair actions, or create class rules.",
+        careers: ["Lawyer", "Judge", "Police Officer", "Human Rights Advocate", "Legal Advisor", "Magistrate"]
+      }
+    ];
+
+    const careers = familyData.flatMap(family => family.careers.map(title => ({
+      title,
+      area: family.name,
+      icon: title.charAt(0),
+      why: `${title} belongs to ${family.name}. ${family.focus}`,
+      subjects: family.subjects,
+      skills: family.skills,
+      activity: family.activity
+    })));
+
+    const quiz = [
+      {
+        question: "What activity sounds most exciting?",
+        options: [
+          { text: "Helping someone who is sick or needs care", area: "Health & Care Careers" },
+          { text: "Building something with a computer", area: "Technology & Data Careers" },
+          { text: "Drawing, painting, designing, or making things beautiful", area: "Visual & Design Arts" },
+          { text: "Speaking, acting, singing, dancing, or performing", area: "Performing Arts" }
+        ]
+      },
+      {
+        question: "Which strength do people notice in you?",
+        options: [
+          { text: "I explain things clearly", area: "Education & Knowledge Sharing" },
+          { text: "I like solving puzzles and following steps", area: "Technology & Data Careers" },
+          { text: "I am caring and observant", area: "Health & Care Careers" },
+          { text: "I notice colours, shapes, clothes, and style", area: "Fashion & Personal Design" }
+        ]
+      },
+      {
+        question: "What kind of problem would you like to solve?",
+        options: [
+          { text: "Helping children learn better", area: "Education & Knowledge Sharing" },
+          { text: "Making useful tools or machines for people", area: "Engineering, Building & Systems" },
+          { text: "Protecting fairness and doing what is right", area: "Law, Justice & Advocacy" },
+          { text: "Creating a business idea that helps people", area: "Business Creation & Growth" }
+        ]
+      }
+    ];
+
+    const profileContent = {
+      Child: {
+        welcome: "Child mode",
+        subtitle: "Explore careers through pictures, cards, quizzes, and fun activities.",
+        heroTitle: "What will I be when I grow up?",
+        heroText: "Pick a career family, flip flashcards, try simple activities, and save careers you like.",
+        title: "Start with curiosity",
+        description: "This mode is for young learners. It should feel playful, simple, and confidence-building.",
+        actions: [
+          { label: "Explore Careers", section: "careers" },
+          { label: "Take Quiz", section: "quiz" },
+          { label: "Use Flashcards", section: "flashcards" }
+        ]
+      },
+      Teen: {
+        welcome: "Teen mode",
+        subtitle: "Connect interests, subjects, skills, and future pathways.",
+        heroTitle: "Discover talents, subjects, and future pathways.",
+        heroText: "Use the career families to compare options, save favorites, and reflect on what fits your strengths.",
+        title: "Think deeper about your future",
+        description: "This mode is for adolescents who are ready to connect careers with subjects, skills, goals, and choices.",
+        actions: [
+          { label: "Browse Families", section: "careers" },
+          { label: "Try Discovery Quiz", section: "quiz" },
+          { label: "Track Progress", section: "progress" }
+        ]
+      },
+      Parent: {
+        welcome: "Parent mode",
+        subtitle: "Guide without pressure, observe interests, and support confidence.",
+        heroTitle: "Guide children gently into future possibilities.",
+        heroText: "Use the guide, activities, and observation notes to notice interests, values, joy, and confidence.",
+        title: "Support, observe, and encourage",
+        description: "This mode helps parents discuss careers at home without forcing children to choose too early.",
+        actions: [
+          { label: "Open Guide", section: "guide" },
+          { label: "See Activities", section: "workbooks" },
+          { label: "View Progress", section: "progress" }
+        ]
+      },
+      Teacher: {
+        welcome: "Teacher mode",
+        subtitle: "Plan lessons using quick learning, standard lessons, and career experience days.",
+        heroTitle: "Bring career discovery into the classroom.",
+        heroText: "Use career families, flashcards, workbook activities, QR reinforcement, and observation notes.",
+        title: "Plan a career discovery lesson",
+        description: "This mode supports assembly talks, circle time, classroom lessons, and full project days.",
+        actions: [
+          { label: "Open Guide", section: "guide" },
+          { label: "Choose Careers", section: "careers" },
+          { label: "QR Hub", section: "qr" }
+        ]
+      }
+    };
+
+    const state = {
+      section: "home",
+      profile: "Child",
+      quizIndex: 0,
+      selectedAnswer: null,
+      quizScores: {},
+      flashIndex: 0,
+      flashBack: false,
+      favorites: JSON.parse(localStorage.getItem("wwibFavorites") || "[]"),
+      completed: Number(localStorage.getItem("wwibCompleted") || "0")
+    };
+
+    const sections = document.querySelectorAll(".section");
+    const navButtons = document.querySelectorAll(".nav button");
+    const profileButtons = document.querySelectorAll(".chip");
+    const careerGrid = document.getElementById("careerGrid");
+    const careerFilter = document.getElementById("careerFilter");
+    const progressPanel = document.getElementById("progressPanel");
+    const profileWelcome = document.getElementById("profileWelcome");
+    const profileSubtitle = document.getElementById("profileSubtitle");
+    const heroTitle = document.getElementById("heroTitle");
+    const heroText = document.getElementById("heroText");
+    const profileTitle = document.getElementById("profileTitle");
+    const profileDescription = document.getElementById("profileDescription");
+    const profileActions = document.getElementById("profileActions");
+    const quickSearchInput = document.getElementById("quickSearchInput");
+    const quickSearchButton = document.getElementById("quickSearchButton");
+    const quickSearchResults = document.getElementById("quickSearchResults");
+
+    function saveState() {
+      localStorage.setItem("wwibFavorites", JSON.stringify(state.favorites));
+      localStorage.setItem("wwibCompleted", String(state.completed));
+    }
+
+    function showSection(id) {
+      state.section = id;
+      sections.forEach(section => section.classList.toggle("active", section.id === id));
+      navButtons.forEach(button => button.classList.toggle("active", button.dataset.section === id));
+      if (id === "progress") renderProgress();
+    }
+
+    navButtons.forEach(button => {
+      button.addEventListener("click", () => showSection(button.dataset.section));
+    });
+
+    document.querySelectorAll("[data-section-link]").forEach(button => {
+      button.addEventListener("click", () => showSection(button.dataset.sectionLink));
+    });
+
+    profileButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        state.profile = button.dataset.profile;
+        profileButtons.forEach(item => item.classList.toggle("active", item === button));
+        renderProfile();
+      });
+    });
+
+    function renderProfile() {
+      const content = profileContent[state.profile];
+      profileWelcome.textContent = content.welcome;
+      profileSubtitle.textContent = content.subtitle;
+      heroTitle.textContent = content.heroTitle;
+      heroText.textContent = content.heroText;
+      profileTitle.textContent = content.title;
+      profileDescription.textContent = content.description;
+      profileActions.innerHTML = content.actions.map(action => `
+        <button class="primary-button" data-profile-section="${action.section}">${action.label}</button>
+      `).join("");
+
+      document.querySelectorAll("[data-profile-section]").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.profileSection));
+      });
+    }
+
+    function renderCareers() {
+      const filter = careerFilter.value;
+      const visible = careers.filter(career => filter === "All" || career.area === filter);
+      careerGrid.innerHTML = visible.map(career => {
+        const isSaved = state.favorites.includes(career.title);
+        return `
+          <article class="card career-card">
+            <div class="career-top">
+              <div>
+                <h4>${career.title}</h4>
+                <p>${career.why}</p>
+              </div>
+              <div class="career-icon">${career.icon}</div>
+            </div>
+            <div class="tag-row">
+              <span class="tag">${career.area}</span>
+              ${career.subjects.map(subject => `<span class="tag">${subject}</span>`).join("")}
+            </div>
+            <p><strong>Activity:</strong> ${career.activity}</p>
+            <button class="${isSaved ? "primary-button" : "small-button"}" data-favorite="${career.title}">
+              ${isSaved ? "Saved" : "Save Career"}
+            </button>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-favorite]").forEach(button => {
+        button.addEventListener("click", () => toggleFavorite(button.dataset.favorite));
+      });
+    }
+
+    function toggleFavorite(title) {
+      if (state.favorites.includes(title)) {
+        state.favorites = state.favorites.filter(item => item !== title);
+      } else {
+        state.favorites.push(title);
+      }
+      saveState();
+      renderCareers();
+    }
+
+    function careerCard(career) {
+      const isSaved = state.favorites.includes(career.title);
+      return `
+        <article class="card career-card">
+          <div class="career-top">
+            <div>
+              <h4>${career.title}</h4>
+              <p>${career.why}</p>
+            </div>
+            <div class="career-icon">${career.icon}</div>
+          </div>
+          <div class="tag-row">
+            <span class="tag">${career.area}</span>
+            ${career.subjects.map(subject => `<span class="tag">${subject}</span>`).join("")}
+          </div>
+          <p><strong>Activity:</strong> ${career.activity}</p>
+          <button class="${isSaved ? "primary-button" : "small-button"}" data-favorite="${career.title}">
+            ${isSaved ? "Saved" : "Save Career"}
+          </button>
+        </article>
+      `;
+    }
+
+    careerFilter.addEventListener("change", renderCareers);
+
+    function runQuickSearch() {
+      const term = quickSearchInput.value.trim().toLowerCase();
+      const results = !term ? careers.slice(0, 9) : careers.filter(career => {
+        const searchable = [
+          career.title,
+          career.area,
+          career.why,
+          career.activity,
+          ...career.subjects,
+          ...career.skills
+        ].join(" ").toLowerCase();
+        return searchable.includes(term);
+      });
+
+      quickSearchResults.innerHTML = results.length
+        ? results.slice(0, 12).map(careerCard).join("")
+        : `<div class="empty-state">No matching careers found. Try another word or family name.</div>`;
+
+      quickSearchResults.querySelectorAll("[data-favorite]").forEach(button => {
+        button.addEventListener("click", () => toggleFavorite(button.dataset.favorite));
+      });
+    }
+
+    quickSearchButton.addEventListener("click", runQuickSearch);
+    quickSearchInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") runQuickSearch();
+    });
+
+    function renderQuiz() {
+      const question = quiz[state.quizIndex];
+      const progress = (state.quizIndex / quiz.length) * 100;
+      document.getElementById("quizProgress").style.width = `${progress}%`;
+      document.getElementById("quizQuestion").textContent = question.question;
+      document.getElementById("quizOptions").innerHTML = question.options.map((option, index) => `
+        <button class="option ${state.selectedAnswer === index ? "selected" : ""}" data-answer="${index}">
+          ${option.text}
+        </button>
+      `).join("");
+      document.getElementById("quizResult").innerHTML = "";
+      document.querySelectorAll("[data-answer]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.selectedAnswer = Number(button.dataset.answer);
+          renderQuiz();
+        });
+      });
+    }
+
+    document.getElementById("quizNext").addEventListener("click", () => {
+      if (state.selectedAnswer === null) return;
+      const chosen = quiz[state.quizIndex].options[state.selectedAnswer];
+      state.quizScores[chosen.area] = (state.quizScores[chosen.area] || 0) + 1;
+      state.selectedAnswer = null;
+
+      if (state.quizIndex < quiz.length - 1) {
+        state.quizIndex += 1;
+        renderQuiz();
+      } else {
+        const bestArea = Object.entries(state.quizScores).sort((a, b) => b[1] - a[1])[0][0];
+        const matches = careers.filter(career => career.area === bestArea).slice(0, 3);
+        document.getElementById("quizProgress").style.width = "100%";
+        document.getElementById("quizQuestion").textContent = "Your suggested career area";
+        document.getElementById("quizOptions").innerHTML = "";
+        document.getElementById("quizResult").innerHTML = `
+          <div class="empty-state">
+            <strong>${bestArea}</strong><br>
+            Suggested careers: ${matches.map(item => item.title).join(", ")}.
+          </div>
+          <button id="restartQuiz" class="small-button" style="margin-top: 12px;">Restart Quiz</button>
+        `;
+        document.getElementById("restartQuiz").addEventListener("click", () => {
+          state.quizIndex = 0;
+          state.quizScores = {};
+          state.selectedAnswer = null;
+          renderQuiz();
+        });
+      }
+    });
+
+    function renderFlashcard() {
+      const career = careers[state.flashIndex];
+      document.getElementById("flashcard").innerHTML = state.flashBack
+        ? `<div><div class="symbol">${career.icon}</div><h4>${career.title}</h4><p>Discussion: Which school subjects and personal habits can help someone prepare for this career?</p></div>`
+        : `<div><div class="symbol">${career.icon}</div><h4>${career.title}</h4><p>${career.why}</p><div class="tag-row" style="justify-content:center; margin-top:14px;">${career.skills.map(skill => `<span class="tag">${skill}</span>`).join("")}</div></div>`;
+      document.getElementById("flipCard").textContent = state.flashBack ? "Show Career" : "Show Prompt";
+    }
+
+    document.getElementById("prevCard").addEventListener("click", () => {
+      state.flashIndex = (state.flashIndex - 1 + careers.length) % careers.length;
+      state.flashBack = false;
+      renderFlashcard();
+    });
+
+    document.getElementById("nextCard").addEventListener("click", () => {
+      state.flashIndex = (state.flashIndex + 1) % careers.length;
+      state.flashBack = false;
+      renderFlashcard();
+    });
+
+    document.getElementById("flipCard").addEventListener("click", () => {
+      state.flashBack = !state.flashBack;
+      renderFlashcard();
+    });
+
+    document.querySelectorAll(".complete-activity").forEach(button => {
+      button.addEventListener("click", () => {
+        if (button.textContent !== "Done") state.completed += 1;
+        button.textContent = "Done";
+        button.className = "primary-button complete-activity";
+        saveState();
+      });
+    });
+
+    function renderProgress() {
+      const favorites = state.favorites.length
+        ? state.favorites.map(item => `<span class="tag">${item}</span>`).join("")
+        : "No saved careers yet.";
+      progressPanel.innerHTML = `
+        <div class="grid">
+          <article class="card">
+            <h4>Saved Careers</h4>
+            <p style="margin-bottom: 12px;">Careers the learner wants to explore again.</p>
+            <div class="tag-row">${favorites}</div>
+          </article>
+          <article class="card">
+            <h4>Activities Completed</h4>
+            <p style="font-size: 38px; color: var(--green); margin: 8px 0 0; font-weight: 800;">${state.completed}</p>
+          </article>
+          <article class="card">
+            <h4>Next Step</h4>
+            <p>Add your real book chapters, workbook pages, flashcard list, and teacher guide content.</p>
+          </article>
+        </div>
+      `;
+    }
+
+    renderCareers();
+    renderProfile();
+    renderQuiz();
+    renderFlashcard();
+    renderProgress();
+  </script>
+</body>
+</html>
